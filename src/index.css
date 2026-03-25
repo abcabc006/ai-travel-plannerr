@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Playfair Display", serif;
+  --font-sans: "DM Sans", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --color-primary-red: #E63946;
+  --color-accent-yellow: #F4A261;
+  --color-fresh-green: #2A9D8F;
+  --color-core-blue: #457B9D;
+  --color-deep-navy: #1D3557;
+  --color-off-white: #F8F9FA;
+  --color-border-light: #E9ECEF;
+  --color-muted-text: #6C757D;
+
+  --radius-card: 16px;
+  --radius-pill: 999px;
+  --radius-input: 12px;
+
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.08);
+  --shadow-red: 0 2px 8px rgba(230,57,70,0.2);
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  html, body {
+    height: auto;               /* NOT 100% */
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    @apply bg-off-white text-deep-navy font-sans;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display;
+  }
+}
+
+/* Wizard Layout Fixes */
+.wizard-page {
+  min-height: 100vh;
+  display: flex !important;
+  flex-direction: row;
+  align-items: flex-start !important;   /* !important to override any conflicting rule */
+  justify-content: center;
+  padding: 40px 20px;
+  background: #F8F9FA;
+}
+
+.wizard-card {
+  display: flex !important;
+  flex-direction: row !important;
+  align-self: flex-start !important;    /* CRITICAL */
+  width: 100%;
+  max-width: 900px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+  height: auto !important;             /* Override any inherited height */
+}
+
+.wizard-left {
+  width: 35%;
+  flex-shrink: 0;
+  background: #E63946;
+  padding: 40px 32px;
+  height: auto !important;             /* MUST be auto */
+  min-height: 0 !important;            /* Remove any min-height */
+  max-height: none !important;
+  align-self: stretch;                 /* Only stretches within card */
+  display: flex;
+  flex-direction: column;
+}
+
+.step-list {
+  display: flex;
+  flex-direction: column;
+  margin-top: 32px;
+  flex: 0;                             /* NOT flex: 1 — do not grow */
+}
+
+.step-connector {
+  height: 36px !important;            /* FIXED px — this is the root cause */
+  min-height: 0 !important;
+  max-height: 36px !important;
+  flex: none !important;              /* NOT flex: 1 */
+  width: 2px !important;
+  background: rgba(255,255,255,0.35);
+  display: block;
+  margin-left: 14px;
+}
+
+.wizard-right {
+  flex: 1;
+  background: #ffffff;
+  padding: 40px;
+  height: auto;
+  overflow-y: visible;                /* NOT scroll unless content overflows */
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-18px); }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.backdrop-blur-header {
+  backdrop-filter: blur(12px);
+}
