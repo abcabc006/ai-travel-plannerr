@@ -16,6 +16,70 @@ const GOOGLE_PLACES_KEY   = "YOUR_GOOGLE_PLACES_KEY_HERE"; // Get from console.c
 const VIATOR_BASE_URL     = "https://api.viator.com/partner";
 const GOOGLE_PLACES_URL   = "https://maps.googleapis.com/maps/api/place";
 
+<<<<<<< HEAD
+=======
+async function fetchUnsplashImage(query: string, _fallbackColor = "#E9ECEF") {
+  const encodedQuery = encodeURIComponent(query);
+  return `https://source.unsplash.com/400x250/?${encodedQuery}`;
+}
+
+function DestinationImage({ query, width = "100%", height = "200px", borderRadius = "12px", style = {} }: {
+  query: string; width?: string; height?: string; borderRadius?: string; style?: React.CSSProperties;
+}) {
+  const [src,     setSrc]     = React.useState<string | null>(null);
+  const [loading, setLoading] = React.useState(true);
+  const [error,   setError]   = React.useState(false);
+
+  React.useEffect(() => {
+    if (!query) return;
+    setLoading(true);
+    setError(false);
+    const url = `https://source.unsplash.com/400x250/?${encodeURIComponent(query)}`;
+    const img = new window.Image();
+    img.onload  = () => { setSrc(url); setLoading(false); };
+    img.onerror = () => { setError(true); setLoading(false); };
+    img.src = url;
+  }, [query]);
+
+  if (loading) return (
+    <div style={{
+      width, height, borderRadius,
+      background: "linear-gradient(90deg, #F0F0F0 25%, #E0E0E0 50%, #F0F0F0 75%)",
+      backgroundSize: "400px 100%",
+      animation: "shimmer 1.4s ease-in-out infinite",
+      ...style,
+    }}>
+      <style>{`@keyframes shimmer{0%{background-position:-400px 0}100%{background-position:400px 0}}`}</style>
+    </div>
+  );
+
+  if (error || !src) return (
+    <div style={{
+      width, height, borderRadius,
+      background: "linear-gradient(135deg, #E9ECEF, #DEE2E6)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      fontSize: "32px", ...style,
+    }}>
+      🖼️
+    </div>
+  );
+
+  return (
+    <img
+      src={src}
+      alt={query}
+      style={{
+        width, height, borderRadius,
+        objectFit: "cover",
+        display: "block",
+        transition: "transform 0.3s ease",
+        ...style,
+      }}
+    />
+  );
+}
+
+>>>>>>> e28f66ec77cba0c96ebf0e65d520beb095121924
 async function loadLeaflet() {
   if (typeof window === "undefined") return;
   if ((window as any).L) return; // Already loaded
@@ -116,16 +180,24 @@ function DayMap({ day, destinations }: { day: any; destinations: string }) {
   const markerColors: Record<string, string> = { activity:"#E63946", food:"#F4A261", hotel:"#2A9D8F" };
   const markerEmojis: Record<string, string> = { activity:"📍", food:"🍽️", hotel:"🏨" };
 
+<<<<<<< HEAD
   const [transport, setTransport]   = React.useState([]);
   const [transLoading, setTransLoading] = React.useState(false);
 
   async function fetchTransportInfo(places, destination) {
+=======
+  const [transport, setTransport]   = React.useState<any>([]);
+  const [transLoading, setTransLoading] = React.useState(false);
+
+  async function fetchTransportInfo(places: any[], destination: string) {
+>>>>>>> e28f66ec77cba0c96ebf0e65d520beb095121924
     if (places.length < 2) return;
     setTransLoading(true);
 
     try {
       const placeNames = places.map(p => p.name).join(", ");
 
+<<<<<<< HEAD
       const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
         headers: {
@@ -134,6 +206,16 @@ function DayMap({ day, destinations }: { day: any; destinations: string }) {
         },
         body: JSON.stringify({
           model: "llama-3.3-70b-versatile",
+=======
+      const res = await fetch(GROQ_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${getAPIKey()}`
+        },
+        body: JSON.stringify({
+          model: GROQ_MODEL,
+>>>>>>> e28f66ec77cba0c96ebf0e65d520beb095121924
           messages: [
             {
               role: "system",
@@ -494,7 +576,11 @@ Return ONLY the JSON.`
 
           {/* Route Cards */}
           <div style={{ padding:"16px", display:"flex", flexDirection:"column", gap:"16px", background:"white" }}>
+<<<<<<< HEAD
             {transport.routes.map((route, ri) => (
+=======
+            {transport.routes.map((route: any, ri: number) => (
+>>>>>>> e28f66ec77cba0c96ebf0e65d520beb095121924
               <div key={ri} style={{ border:"1.5px solid #E9ECEF", borderRadius:"12px", overflow:"hidden" }}>
 
                 {/* Route Header */}
@@ -516,7 +602,11 @@ Return ONLY the JSON.`
 
                 {/* Transport Options */}
                 <div style={{ padding:"12px", display:"flex", flexDirection:"column", gap:"10px" }}>
+<<<<<<< HEAD
                   {(route.options || []).map((opt, oi) => (
+=======
+                  {(route.options || []).map((opt: any, oi: number) => (
+>>>>>>> e28f66ec77cba0c96ebf0e65d520beb095121924
                     <div key={oi} style={{ display:"grid", gridTemplateColumns:"auto 1fr auto", gap:"12px", alignItems:"start", padding:"10px 12px", background:"#FAFAFA", borderRadius:"10px", border:"1px solid #F0F0F0" }}>
 
                       {/* Mode Icon */}
@@ -1050,6 +1140,7 @@ function FlightHotelListings({ tripPlan }: { tripPlan: TravelPlan }) {
               animate={{ opacity:1, y:0 }}
               transition={{ delay: i * 0.05 }}
               style={{ 
+<<<<<<< HEAD
                 border:"1px solid #F0F0F0", borderRadius:"20px", padding:"24px", background: f.class === "Business" ? "linear-gradient(145deg, #FFFFFF 0%, #F8F9FF 100%)" : "white",
                 boxShadow:"0 4px 15px rgba(0,0,0,0.02)", position:"relative", overflow:"hidden"
               }}
@@ -1063,6 +1154,51 @@ function FlightHotelListings({ tripPlan }: { tripPlan: TravelPlan }) {
               <div style={{ display:"flex", alignItems:"center", gap:"12px", marginBottom:"20px" }}>
                 <div style={{ width:"40px", height:"40px", borderRadius:"10px", background:"#F1F3F5", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:800, color:"#1D3557", fontSize:"14px" }}>
                   {f.airlineLogo}
+=======
+                border:"1px solid #F0F0F0", borderRadius:"20px", padding:0, background: f.class === "Business" ? "linear-gradient(145deg, #FFFFFF 0%, #F8F9FF 100%)" : "white",
+                boxShadow:"0 4px 15px rgba(0,0,0,0.02)", position:"relative", overflow:"hidden"
+              }}
+            >
+              {/* Flight route image */}
+              <div style={{ position:"relative", overflow:"hidden", height:"120px", borderRadius:"20px 20px 0 0" }}>
+                <DestinationImage
+                  query={`${f.arrival?.city || "airport"} city skyline`}
+                  height="120px"
+                  borderRadius="0"
+                  style={{ borderRadius:"20px 20px 0 0" }}
+                />
+                <div style={{ position:"absolute", inset:0, background:"linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 60%)", borderRadius:"20px 20px 0 0" }}/>
+                <div style={{ position:"absolute", bottom:"10px", left:"16px", display:"flex", alignItems:"center", gap:"8px" }}>
+                  <span style={{ fontFamily:"JetBrains Mono,monospace", fontSize:"14px", fontWeight:700, color:"white" }}>{f.departure?.airportCode || ""}</span>
+                  <span style={{ color:"rgba(255,255,255,0.7)", fontSize:"14px" }}>→</span>
+                  <span style={{ fontFamily:"JetBrains Mono,monospace", fontSize:"14px", fontWeight:700, color:"white" }}>{f.arrival?.airportCode || ""}</span>
+                  <span style={{ background:"rgba(255,255,255,0.2)", backdropFilter:"blur(4px)", color:"white", borderRadius:"999px", padding:"2px 8px", fontSize:"11px", fontFamily:"DM Sans,sans-serif" }}>
+                    {f.stops === "Non-stop" ? "⚡ Non-stop" : f.stops}
+                  </span>
+                </div>
+                {f.class === "Business" && (
+                  <div style={{ position:"absolute", top:"10px", right:"-24px", background:"#FFB703", color:"#1D3557", fontSize:"10px", fontWeight:800, padding:"4px 35px", transform:"rotate(45deg)", fontFamily:"DM Sans,sans-serif" }}>
+                    PREMIUM
+                  </div>
+                )}
+              </div>
+
+              <div style={{ padding:"20px 24px" }}>
+              <div style={{ display:"flex", alignItems:"center", gap:"12px", marginBottom:"20px" }}>
+                <div style={{ width:"52px", height:"52px", borderRadius:"12px", background:"white", border:"1px solid #E9ECEF", display:"flex", alignItems:"center", justifyContent:"center", overflow:"hidden", flexShrink:0, boxShadow:"0 2px 8px rgba(0,0,0,0.08)" }}>
+                  <img
+                    src={`https://logo.clearbit.com/${(f.airline||"airline").toLowerCase().replace(/\s+/g,"").replace(/airways|airlines|air|india|express/g,"")}.com`}
+                    alt={f.airline}
+                    style={{ width:"36px", height:"36px", objectFit:"contain" }}
+                    onError={(e:any) => {
+                      e.target.style.display = "none";
+                      if (e.target.nextSibling) e.target.nextSibling.style.display = "flex";
+                    }}
+                  />
+                  <div style={{ display:"none", width:"100%", height:"100%", alignItems:"center", justifyContent:"center", background: f.class==="Business"?"#FFF9EB":"#EBF4FF", color: f.class==="Business"?"#92400E":"#1E40AF", fontFamily:"DM Sans,sans-serif", fontSize:"13px", fontWeight:800 }}>
+                    {(f.airline||"  ").substring(0,2).toUpperCase()}
+                  </div>
+>>>>>>> e28f66ec77cba0c96ebf0e65d520beb095121924
                 </div>
                 <div>
                   <h4 style={{ margin:0, fontSize:"16px", fontWeight:700, color:"#1D3557" }}>{f.airline}</h4>
@@ -1111,6 +1247,10 @@ function FlightHotelListings({ tripPlan }: { tripPlan: TravelPlan }) {
                   View Deal
                 </a>
               </div>
+<<<<<<< HEAD
+=======
+              </div>{/* end padding div */}
+>>>>>>> e28f66ec77cba0c96ebf0e65d520beb095121924
             </motion.div>
           ))
         ) : (
@@ -1120,14 +1260,42 @@ function FlightHotelListings({ tripPlan }: { tripPlan: TravelPlan }) {
               initial={{ opacity:0, y:10 }}
               animate={{ opacity:1, y:0 }}
               transition={{ delay: i * 0.05 }}
+<<<<<<< HEAD
               style={{ border:"1px solid #F0F0F0", borderRadius:"20px", padding:"24px", background:"white", boxShadow:"0 4px 15px rgba(0,0,0,0.02)" }}
             >
+=======
+              style={{ border:"1px solid #F0F0F0", borderRadius:"20px", padding:0, background:"white", boxShadow:"0 4px 15px rgba(0,0,0,0.02)", overflow:"hidden" }}
+            >
+              {/* Hotel image */}
+              <div style={{ position:"relative", overflow:"hidden", height:"160px" }}>
+                <DestinationImage
+                  query={`${h.name} ${h.location} hotel interior`}
+                  height="160px"
+                  borderRadius="0"
+                />
+                <div style={{ position:"absolute", inset:0, background:"linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 50%)" }}/>
+                <div style={{ position:"absolute", top:"10px", right:"12px", background:"rgba(0,0,0,0.4)", backdropFilter:"blur(4px)", borderRadius:"999px", padding:"4px 10px", display:"flex", gap:"2px" }}>
+                  {Array.from({length: h.stars||3}).map((_:any, si:number) => (
+                    <span key={si} style={{ color:"#F4A261", fontSize:"12px" }}>★</span>
+                  ))}
+                </div>
+                <div style={{ position:"absolute", bottom:"10px", left:"14px" }}>
+                  <p style={{ fontFamily:"DM Sans,sans-serif", fontSize:"15px", fontWeight:700, color:"white", margin:0, textShadow:"0 1px 4px rgba(0,0,0,0.4)" }}>{h.name}</p>
+                  <p style={{ fontFamily:"DM Sans,sans-serif", fontSize:"12px", color:"rgba(255,255,255,0.85)", margin:0 }}>📍 {h.location}</p>
+                </div>
+              </div>
+              <div style={{ padding:"20px 24px" }}>
+>>>>>>> e28f66ec77cba0c96ebf0e65d520beb095121924
               <div style={{ display:"flex", justifyContent:"space-between", marginBottom:"8px" }}>
                 <span style={{ fontSize:"11px", color:"#E63946", fontWeight:800, textTransform:"uppercase", letterSpacing:"0.5px" }}>{h.category}</span>
                 <div style={{ color:"#FFB703", fontSize:"12px" }}>{"★".repeat(h.stars)}</div>
               </div>
+<<<<<<< HEAD
               <h3 style={{ margin:"0 0 6px", fontSize:"18px", fontWeight:700, color:"#1D3557", lineHeight:1.3 }}>{h.name}</h3>
               <p style={{ margin:"0 0 16px", fontSize:"13px", color:"#6C757D" }}>📍 {h.location} · ⭐ {h.rating} ({h.reviewCount})</p>
+=======
+              <p style={{ margin:"0 0 16px", fontSize:"13px", color:"#6C757D" }}>⭐ {h.rating} ({h.reviewCount}) · {h.distanceFromCenter}</p>
+>>>>>>> e28f66ec77cba0c96ebf0e65d520beb095121924
               
               <div style={{ display:"flex", flexWrap:"wrap", gap:"6px", marginBottom:"20px" }}>
                 {h.amenities.slice(0, 3).map((a: any, ai: number) => (
@@ -1156,6 +1324,10 @@ function FlightHotelListings({ tripPlan }: { tripPlan: TravelPlan }) {
               >
                 Book on Booking.com
               </a>
+<<<<<<< HEAD
+=======
+              </div>{/* end padding div */}
+>>>>>>> e28f66ec77cba0c96ebf0e65d520beb095121924
             </motion.div>
           ))
         )}
@@ -2423,6 +2595,7 @@ export default function PlanView() {
             </section>
 
             {/* Top Spots */}
+<<<<<<< HEAD
             <section id="spots" className="bg-white rounded-card p-8 shadow-card border border-border-light scroll-mt-24">
               <div className="flex items-center gap-3 mb-8">
                 <div className="w-10 h-10 rounded-full bg-fresh-green/10 flex items-center justify-center">
@@ -2441,12 +2614,52 @@ export default function PlanView() {
                     </div>
                     <p className="text-xs font-bold text-muted-text uppercase tracking-wider mb-2">{spot.type} · Best at {spot.bestTime}</p>
                     <p className="text-sm text-muted-text leading-relaxed">{spot.description}</p>
+=======
+            <section id="spots" style={{ background:"white", borderRadius:"20px", padding:"28px", boxShadow:"0 4px 24px rgba(0,0,0,0.08)", marginBottom:"24px", scrollMarginTop:"6rem" }}>
+              <div style={{ display:"flex", alignItems:"center", gap:"12px", marginBottom:"20px" }}>
+                <div style={{ width:"44px", height:"44px", borderRadius:"12px", background:"linear-gradient(135deg,#F0FFF4,#DCFCE7)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"20px" }}>📍</div>
+                <h2 style={{ fontFamily:"Playfair Display,serif", fontSize:"22px", color:"#1D3557", margin:0 }}>Top Spots to Visit</h2>
+              </div>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(280px,1fr))", gap:"16px" }}>
+                {plan.topSpots.map((spot, i) => (
+                  <div key={i} style={{ border:"1.5px solid #E9ECEF", borderRadius:"16px", overflow:"hidden", transition:"all 0.25s ease" }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor="#2A9D8F"; (e.currentTarget as HTMLDivElement).style.transform="translateY(-4px)"; (e.currentTarget as HTMLDivElement).style.boxShadow="0 10px 30px rgba(42,157,143,0.15)"; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor="#E9ECEF"; (e.currentTarget as HTMLDivElement).style.transform="translateY(0)"; (e.currentTarget as HTMLDivElement).style.boxShadow="none"; }}
+                  >
+                    <div style={{ position:"relative", overflow:"hidden" }}>
+                      <DestinationImage
+                        query={`${spot.name} ${(plan.destinations||" ").split(",")[0]} attraction`}
+                        height="180px"
+                        borderRadius="0"
+                      />
+                      <div style={{ position:"absolute", inset:0, background:"linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 55%)" }}/>
+                      <div style={{ position:"absolute", top:"10px", right:"10px", background:"rgba(0,0,0,0.45)", backdropFilter:"blur(6px)", borderRadius:"999px", padding:"4px 10px", display:"flex", alignItems:"center", gap:"4px" }}>
+                        <span style={{ color:"#F4A261", fontSize:"12px" }}>★</span>
+                        <span style={{ fontFamily:"JetBrains Mono,monospace", fontSize:"12px", color:"white", fontWeight:700 }}>{spot.rating || "4.5"}</span>
+                      </div>
+                      <div style={{ position:"absolute", top:"10px", left:"10px", background:"rgba(42,157,143,0.85)", backdropFilter:"blur(4px)", borderRadius:"999px", padding:"3px 10px" }}>
+                        <span style={{ fontFamily:"DM Sans,sans-serif", fontSize:"11px", color:"white", fontWeight:600, textTransform:"uppercase", letterSpacing:"0.5px" }}>{spot.type}</span>
+                      </div>
+                      <div style={{ position:"absolute", bottom:"10px", left:"12px", right:"12px" }}>
+                        <p style={{ fontFamily:"Playfair Display,serif", fontSize:"17px", fontWeight:700, color:"white", margin:0, textShadow:"0 1px 4px rgba(0,0,0,0.4)" }}>{spot.name}</p>
+                      </div>
+                    </div>
+                    <div style={{ padding:"14px 16px" }}>
+                      <p style={{ fontFamily:"DM Sans,sans-serif", fontSize:"13px", color:"#4A5568", margin:"0 0 10px", lineHeight:1.6 }}>{spot.description}</p>
+                      <div style={{ display:"flex", alignItems:"center", gap:"8px" }}>
+                        <span style={{ background:"#F0FFF4", color:"#065F46", borderRadius:"999px", padding:"3px 10px", fontSize:"11px", fontFamily:"DM Sans,sans-serif", fontWeight:600 }}>
+                          ⏰ Best: {spot.bestTime}
+                        </span>
+                      </div>
+                    </div>
+>>>>>>> e28f66ec77cba0c96ebf0e65d520beb095121924
                   </div>
                 ))}
               </div>
             </section>
 
             {/* Foodie Hotspots */}
+<<<<<<< HEAD
             <section id="food" className="bg-white rounded-card p-8 shadow-card border border-border-light scroll-mt-24">
               <div className="flex items-center gap-3 mb-8">
                 <div className="w-10 h-10 rounded-full bg-accent-yellow/10 flex items-center justify-center">
@@ -2465,6 +2678,42 @@ export default function PlanView() {
                     </div>
                     <p className="text-xs font-bold text-muted-text uppercase tracking-wider mb-2">{spot.cuisine} · Near {spot.nearLandmark}</p>
                     <p className="text-sm text-muted-text leading-relaxed">{spot.description}</p>
+=======
+            <section id="food" style={{ background:"white", borderRadius:"20px", padding:"28px", boxShadow:"0 4px 24px rgba(0,0,0,0.08)", marginBottom:"24px", scrollMarginTop:"6rem" }}>
+              <div style={{ display:"flex", alignItems:"center", gap:"12px", marginBottom:"20px" }}>
+                <div style={{ width:"44px", height:"44px", borderRadius:"12px", background:"linear-gradient(135deg,#FFF9EB,#FEF3C7)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"20px" }}>🍽️</div>
+                <h2 style={{ fontFamily:"Playfair Display,serif", fontSize:"22px", color:"#1D3557", margin:0 }}>Foodie Hotspots</h2>
+              </div>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(280px,1fr))", gap:"16px" }}>
+                {plan.foodieHotspots.map((food, i) => (
+                  <div key={i} style={{ border:"1.5px solid #E9ECEF", borderRadius:"16px", overflow:"hidden", transition:"all 0.25s ease" }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor="#F4A261"; (e.currentTarget as HTMLDivElement).style.transform="translateY(-4px)"; (e.currentTarget as HTMLDivElement).style.boxShadow="0 10px 30px rgba(244,162,97,0.18)"; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor="#E9ECEF"; (e.currentTarget as HTMLDivElement).style.transform="translateY(0)"; (e.currentTarget as HTMLDivElement).style.boxShadow="none"; }}
+                  >
+                    <div style={{ position:"relative", overflow:"hidden" }}>
+                      <DestinationImage
+                        query={`${food.name} ${food.cuisine} food restaurant ${(plan.destinations||" ").split(",")[0]}`}
+                        height="180px"
+                        borderRadius="0"
+                      />
+                      <div style={{ position:"absolute", inset:0, background:"linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%)" }}/>
+                      <div style={{ position:"absolute", top:"10px", right:"10px", background:"rgba(0,0,0,0.45)", backdropFilter:"blur(6px)", borderRadius:"999px", padding:"4px 10px" }}>
+                        <span style={{ fontFamily:"DM Sans,sans-serif", fontSize:"11px", color:"white", fontWeight:600 }}>
+                          {food.priceRange === "Budget" ? "💚 Budget" : food.priceRange === "Splurge" ? "💎 Splurge" : "🟡 Mid-range"}
+                        </span>
+                      </div>
+                      <div style={{ position:"absolute", top:"10px", left:"10px", background:"rgba(244,162,97,0.85)", backdropFilter:"blur(4px)", borderRadius:"999px", padding:"3px 10px" }}>
+                        <span style={{ fontFamily:"DM Sans,sans-serif", fontSize:"11px", color:"white", fontWeight:600 }}>{food.cuisine}</span>
+                      </div>
+                      <div style={{ position:"absolute", bottom:"10px", left:"12px", right:"12px" }}>
+                        <p style={{ fontFamily:"Playfair Display,serif", fontSize:"17px", fontWeight:700, color:"white", margin:"0 0 2px", textShadow:"0 1px 4px rgba(0,0,0,0.4)" }}>{food.name}</p>
+                        <p style={{ fontFamily:"DM Sans,sans-serif", fontSize:"11px", color:"rgba(255,255,255,0.85)", margin:0 }}>📍 Near {food.nearLandmark}</p>
+                      </div>
+                    </div>
+                    <div style={{ padding:"14px 16px" }}>
+                      <p style={{ fontFamily:"DM Sans,sans-serif", fontSize:"13px", color:"#4A5568", margin:0, lineHeight:1.6 }}>{food.description}</p>
+                    </div>
+>>>>>>> e28f66ec77cba0c96ebf0e65d520beb095121924
                   </div>
                 ))}
               </div>
